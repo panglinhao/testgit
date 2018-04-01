@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.slsale.mapper.FunctionMapper">
+	
+	
+	<select id="getMainFunctionList" parameterType="authority" resultType="function">
+		SELECT * FROM au_function 
+		WHERE id IN (SELECT functionId FROM au_authority WHERE roleId = #{roleId}) 
+		AND parentId = 0
+	</select>
+
+	<select id="getSubFunctionList" parameterType="function" resultType="function">
+		SELECT * FROM au_function 
+		WHERE id IN (SELECT functionId FROM au_authority WHERE roleId = #{roleId}) 
+		AND parentId = #{id}
+	</select>
+	
+	<select id="getFunctionListById" parameterType="function" resultType="function">
+		select * from au_function where parentId = #{id}
+	</select>
+	
+	<!-- 主菜单有6个，主菜单下的是子权限 -->
+	<!-- 查询出角色需要的权限功能，除了条件中的，子权限的子权限也默认副给角色，parentId=999的权限所有用户都有 -->
+	<select id="getFunctionListIn" resultType="function" parameterType="String">
+		select * from au_function where id in(${funids})
+		or parentId in(select id from au_function where id in(${funids}) and parentId > 0)
+		or parentId = 999
+	</select>
+	
+	
+	<!-- getFunctionListByRoleId -->
+	<select id="getFunctionListByRoleId" resultType="function" parameterType="authority">
+		select * from au_function where id in(select functionid from au_authority where roleId = #{roleId})
+		and parentId > 0
+	</select>
+</mapper>

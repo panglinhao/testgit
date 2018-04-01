@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.slsale.mapper.GoodsPackAffiliatedMapper">
+
+	<resultMap type="goodsPackAffiliated" id="goodsPackAffiliatedList">
+		<result property="id" column="id"/>
+		<result property="goodsPackId" column="goodsPackId"/>
+		<result property="goodsInfoId" column="goodsInfoId"/>
+		<result property="realPrice" column="realPrice"/>
+		<result property="goodsName" column="goodsName"/>
+		<result property="goodsNum" column="goodsNum"/>
+		<result property="unit" column="unit"/>
+	</resultMap>
+
+	 <select id="getGoodsPackAffiliatedById" resultMap="goodsPackAffiliatedList" parameterType="goodsPackAffiliated">
+		select * from goods_pack_affiliated a,goods_info b where a.goodsInfoId = b.id
+			<if test="goodsPackId != null">
+			  and a.goodsPackId = #{goodsPackId}
+			</if>
+	</select>
+	
+	<insert id="addGoodsPackAffiliated" parameterType="goodsPackAffiliated">
+		insert into goods_pack_affiliated(`goodsPackId`,`goodsInfoId`,`goodsNum`) 
+		values(#{goodsPackId},#{goodsInfoId},#{goodsNum})
+	</insert>
+	
+	<delete id="delGoodsPackAffiliated" parameterType="goodsPackAffiliated">
+		delete from goods_pack_affiliated where goodsPackId = #{goodsPackId}
+	</delete>
+	
+	<select id="getGoodsInfoExist" resultType="int" parameterType="goodsPackAffiliated">
+		select count(1) from goods_pack_affiliated 
+		<where>
+			<if test="goodsInfoId != null"> and goodsInfoId = #{goodsInfoId}</if>
+		</where>
+	</select>
+</mapper>

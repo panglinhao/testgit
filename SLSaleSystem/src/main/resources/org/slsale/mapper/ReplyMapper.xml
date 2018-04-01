@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.slsale.mapper.ReplyMapper">
+	<select id="getReplys" parameterType="reply" resultType="reply">
+		select * from reply 
+		<where>
+			<if test="messageId != null"> and messageId = #{messageId}</if>
+		</where>
+	</select>
+	
+	<insert id="addReply" parameterType="reply">
+		insert into reply(`messageId`,`replyContent`,`createdBy`,`createTime`)
+		values(#{messageId},#{replyContent},#{createdBy},#{createTime})
+	</insert>
+	
+	<delete id="delReply" parameterType="reply">
+		delete from reply
+		<where>
+			<if test="id != null">and id = #{id}</if>
+			<if test="messageId != null"> and messageId = #{messageId}</if>
+		</where>
+	</delete>
+</mapper>

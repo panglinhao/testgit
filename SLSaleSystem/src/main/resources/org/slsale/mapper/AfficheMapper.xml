@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.slsale.mapper.AfficheMapper">
+
+	<select id="getAffiches" parameterType="affiche" resultType="affiche">
+		select * from affiche 
+		order by publishTime desc
+		limit #{starNum},#{pageSize}
+	</select>
+	
+	<select id="count" parameterType="affiche" resultType="int">
+		select count(1) from affiche
+	</select>
+	
+	<insert id="addAffiche" parameterType="affiche">
+		insert into affiche(`code`,`title`,`content`,`publisher`,`publishTime`,`startTime`,`endTime`)
+		values(#{code},#{title},#{content},#{publisher},#{publishTime},#{startTime},#{endTime})
+	</insert>
+	
+	<select id="getAfficheById" parameterType="affiche" resultType="affiche">
+		select * from affiche where id = #{id}
+	</select>
+	
+	<update id="modifyAffiche" parameterType="affiche">
+		update affiche
+		<set>
+			<if test="code != null">code = #{code},</if>
+			<if test="title != null">title = #{title},</if>
+			<if test="content != null">content = #{content},</if>
+			<if test="publisher != null">publisher = #{publisher},</if>
+			<if test="publishTime != null">publishTime = #{publishTime},</if>
+			<if test="startTime != null">startTime = #{startTime},</if>
+			<if test="endTime != null">endTime = #{endTime},</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delAffiche" parameterType="affiche">
+		delete from affiche where id = #{id}
+	</delete>
+</mapper>

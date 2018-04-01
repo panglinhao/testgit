@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.slsale.mapper.LeaveMessageMapper">
+	
+	<select id="getLeavaMessages" parameterType="leaveMessage" resultType="leaveMessage">
+		select * from leave_message
+		<where>
+			<if test="createdBy != null"> and createdBy = #{createdBy}</if>
+		</where>
+		order by createTime desc
+		limit #{starNum},#{pageSize}
+	</select>
+	
+	<select id="count" parameterType="leaveMessage" resultType="int">
+		select count(1) from leave_message
+		<where>
+			<if test="createdBy != null"> and createdBy = #{createdBy}</if>
+		</where>
+	</select>
+	
+	<select id="getLeaveMessageById" parameterType="leaveMessage" resultType="leaveMessage">
+		select * from leave_message where id = #{id}
+	</select>
+	
+	<update id="modifyLeaveMessage">
+		update leave_message
+		<set>
+			<if test="createdBy != null"> createdBy = #{createdBy},</if>
+			<if test="messageCode != null"> messageCode = #{messageCode},</if>
+			<if test="messageTitle != null"> messageTitle = #{messageTitle},</if>
+			<if test="messageContent != null"> messageContent = #{messageContent},</if>
+			<if test="state != null"> state = #{state},</if>
+			<if test="createTime != null"> createTime = #{createTime},</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delLeaveMessage" parameterType="leaveMessage">
+		delete from leave_message where id = #{id}
+	</delete>
+	
+	<insert id="addLeaveMessage" parameterType="leaveMessage">
+		insert into leave_message(`createdBy`,`messageCode`,`messageTitle`,`messageContent`,`state`,`createTime`)
+		values(#{createdBy},#{messageCode},#{messageTitle},#{messageContent},#{state},#{createTime})
+	</insert>
+</mapper>

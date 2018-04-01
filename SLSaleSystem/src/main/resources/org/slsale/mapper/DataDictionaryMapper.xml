@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.slsale.mapper.DataDictionaryMapper">
+	<select id="getDataDictionaries" parameterType="dataDictionary" resultType="dataDictionary">
+		select * from data_dictionary
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="typeCode != null">
+				and typeCode = #{typeCode}
+			</if>
+			<if test="typeName != null">
+				and typeName = #{typeName}
+			</if>
+			<if test="valueId != null">
+				and valueId = #{valueId}
+			</if>
+			<if test="valueName != null">
+				and valueName = #{valueName}
+			</if>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+		</trim>
+		order by valueId asc
+	</select>
+	
+	<select id="getDataDicByTypeCode" resultType="dataDictionary">
+		SELECT * FROM `data_dictionary` GROUP BY typeCode ORDER BY id ASC
+	</select>
+	
+	<select id="typeCodeIsExit" resultType="int" parameterType="dataDictionary">
+		select count(1) from data_dictionary 
+		<where>
+			<if test="typeCode != null"> and typeCode = #{typeCode}</if>
+			<if test="valueId != null">and valueId = #{valueId}</if>
+			<if test="valueName != null">and valueName = #{valueName}</if>
+			<if test="id != null"> and id != #{id}</if>
+		</where>
+	</select>
+	
+	<update id="modifyDataDictionary" parameterType="dataDictionary">
+		update data_dictionary 
+		<set>
+			<if test="typeCode != null"> typeCode = #{typeCode},</if>
+			<if test="typeName != null"> typeName = #{typeName},</if>
+			<if test="valueId != null">valueId = #{valueId},</if>
+			<if test="valueName != null">valueName = #{valueName},</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<update id="modifyDataDictionarys" parameterType="dataDictionary">
+		update data_dictionary set typeCode = #{typeCode},typeName = #{typeName} where typeCode = #{valueName}
+	</update>
+	
+	<delete id="delDataDictionary" parameterType="dataDictionary">
+		delete from data_dictionary
+		<where>
+			<if test="id != null"> and id = #{id}</if>
+			<if test="typeCode != null"> and typeCode = #{typeCode}</if>
+		</where>
+	</delete>
+	
+	<select id="getDataDictionariesNotIn" parameterType="dataDictionary" resultType="dataDictionary">
+		select * from data_dictionary where typeCode = #{typeName} 
+		and typeCode not in (select typeCode from data_dictionary where typeCode = #{typeCode})
+	</select>
+	
+	<insert id="addDataDictionary" parameterType="dataDictionary">
+		insert into data_dictionary(`typeCode`,`typeName`,`valueId`,`valueName`)
+		values(#{typeCode},#{typeName},#{valueId},#{valueName})
+	</insert>
+	
+	<select id="getMaxValueId" parameterType="dataDictionary" resultType="java.lang.Integer">
+		select MAX(valueId) from data_dictionary where typeCode = #{typeCode}
+	</select>
+	
+</mapper>

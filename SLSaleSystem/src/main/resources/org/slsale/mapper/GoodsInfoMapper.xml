@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.slsale.mapper.GoodsInfoMapper">
+	
+	<select id="getGoodsInfoById" parameterType="goodsInfo" resultType="goodsInfo">
+		select * from goods_info where id = #{id}
+	</select>
+	
+	<select id="getGoodsInfoList" parameterType="goodsInfo" resultType="goodsInfo">
+		select * from goods_info 
+		<where>
+			<if test="goodsName != null"> and goodsName like CONCAT('%',#{goodsName},'%')</if>
+			<if test="state != null"> and state = #{state}</if>
+		</where>
+		order by createTime desc 
+		limit #{starNum},#{pageSize}
+	</select>
+	
+	<select id="GoodsInfoExist" parameterType="goodsInfo" resultType="java.lang.Integer">
+		select count(1) from goods_info 
+		<where>
+			<if test="goodsSN != null"> and goodsSN = #{goodsSN}</if>
+			<if test="id != null"> and id != #{id}</if>
+		</where>
+	</select>
+	
+	<select id="count" parameterType="goodsInfo" resultType="java.lang.Integer">
+		select COUNT(1) from goods_info 
+		<where>
+			<if test="goodsName != null"> and goodsName like CONCAT('%',#{goodsName},'%')</if>
+			<if test="state != null"> and state = #{state}</if>
+		</where>
+	</select>
+	
+	<select id="getGoodsList" parameterType="goodsInfo" resultType="goodsInfo">
+		select * from goods_info
+		<where>
+			<if test="state != null">and state = #{state}</if>
+		</where>
+	</select>
+	
+	<insert id="addGoodsInfo" parameterType="goodsInfo">
+		insert into goods_info(goodsSN,goodsName,goodsFormat,marketPrice,
+		realPrice,state,note,num,unit,createTime,lastUpdateTime,createdBy)
+		values(#{goodsSN},#{goodsName},#{goodsFormat},#{marketPrice},
+		#{realPrice},#{state},#{note},#{num},#{unit},#{createTime},
+		#{lastUpdateTime},#{createdBy})
+	</insert>
+	
+	<delete id="deleteGoodsInfo" parameterType="goodsInfo">
+		delete from goods_info where id = #{id}
+	</delete>
+	
+	<update id="modifyGoodsInfo" parameterType="goodsInfo">
+		update goods_info 
+		<set>
+			<if test="goodsSN != null">goodsSN = #{goodsSN},</if>
+			<if test="goodsName != null">goodsName = #{goodsName},</if>
+			<if test="goodsFormat != null">goodsFormat = #{goodsFormat},</if>
+			<if test="marketPrice != null">marketPrice = #{marketPrice},</if>
+			<if test="realPrice != null">realPrice = #{realPrice},</if>
+			<if test="state != null">state = #{state},</if>
+			<if test="note != null">note = #{note},</if>
+			<if test="num != null">num = #{num},</if>
+			<if test="unit != null">unit = #{unit},</if>
+			<if test="createTime != null">createTime = #{createTime},</if>
+			<if test="lastUpdateTime != null">lastUpdateTime = #{lastUpdateTime},</if>
+			<if test="createdBy != null">createdBy = #{createdBy},</if>
+		</set>
+		where id = #{id}
+	</update>
+</mapper>

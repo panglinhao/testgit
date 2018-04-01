@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.slsale.mapper.InformationMapper">
+
+	<select id="getInformations" parameterType="information" resultType="information">
+		select * from `information`
+		<where>
+			<if test="fileName != null">
+				and fileName like CONCAT('%',#{fileName},'%')
+			</if>
+			<if test="title != null">
+				and title like CONCAT('%',#{title},'%')
+			</if>
+			<if test="state != null">
+				and state = #{state}
+			</if>
+		</where>
+		order by `publishTime` desc
+		limit #{starNum},#{pageSize}
+	</select>
+	
+	<select id="count" parameterType="information" resultType="int">
+		select count(1) from information
+		<where>
+			<if test="fileName != null">
+				and fileName like CONCAT('%',#{fileName},'%')
+			</if>
+			<if test="title != null">
+				and title like CONCAT('%',#{title},'%')
+			</if>
+			<if test="state != null">
+				and state = #{state}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getInformationById" parameterType="information" resultType="information">
+		select * from information where id=#{id}
+	</select>
+	
+	<update id="modifyInformation" parameterType="information">
+		update information
+		<set>
+			<if test="title != null"> title = #{title},</if>
+			<if test="content != null"> content = #{content},</if>
+			<if test="state != null"> state = #{state},</if>
+			<if test="publisher != null"> publisher = #{publisher},</if>
+			<if test="publishTime != null"> publishTime = #{publishTime},</if>
+			<if test="typeId != null"> typeId = #{typeId},</if>
+			<if test="typeName != null"> typeName = #{typeName},</if>
+			<if test="fileName != null"> fileName = #{fileName},</if>
+			<if test="filePath != null"> filePath = #{filePath},</if>
+			<if test="fileSize != null"> fileSize = #{fileSize},</if>
+			<if test="uploadTime != null"> uploadTime = #{uploadTime},</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<insert id="addInformation" parameterType="information">
+		insert into information(`title`,`content`,`state`,`publisher`,`publishTime`,`typeId`,
+							`typeName`,`fileName`,`filePath`,`fileSize`,`uploadTime`)
+			values(#{title},#{content},#{state},#{publisher},#{publishTime},#{typeId},
+							#{typeName},#{fileName},#{filePath},#{fileSize},#{uploadTime})
+	</insert>
+	
+	<delete id="delInformation" parameterType="information">
+		delete from information where id = #{id}
+	</delete>
+	
+	<update id="modifyInformationFileInfo" parameterType="information">
+		update information 
+			 <set>
+				 <if test="fileName != null"> fileName = #{fileName},</if>
+				 <if test="filePath != null"> filePath = #{filePath},</if>
+				 <if test="fileSize != null"> fileSize = #{fileSize},</if>
+				 <if test="uploadTime != null"> uploadTime = #{uploadTime},</if>
+		     </set>
+		  	where filePath = #{typeName}
+	</update>
+</mapper>
